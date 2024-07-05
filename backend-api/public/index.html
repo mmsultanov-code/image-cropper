@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Кроппер изображений</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		.aspect-ratio-icons img.selected {
+			border-color: #4CAF50;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h1 class="text-center">Загрузить и обработать изображение</h1>
+		<ul class="nav nav-tabs" id="imageTabs" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="crop-tab" data-toggle="tab" href="#crop" role="tab" aria-controls="crop"
+					aria-selected="true">Обрезка фотографии</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="resize-tab" data-toggle="tab" href="#resize" role="tab" aria-controls="resize"
+					aria-selected="false">Уменьшение фотографии</a>
+			</li>
+		</ul>
+		<div class="tab-content mt-4" id="imageTabsContent">
+			<div class="tab-pane fade show active" id="crop" role="tabpanel" aria-labelledby="crop-tab">
+				<div class="preview-container mb-4">
+					<img id="previewImage" style="display: none;" src="#" alt="Preview Image" class="img-fluid">
+				</div>
+				<div class="form-group">
+					<input type="file" class="form-control-file" id="uploadInput" accept="image/*">
+				</div>
+				<div id="dimensionsContainer" class="form-group hidden">
+					<label for="cropWidth">Ширина:</label>
+					<input type="number" class="form-control" id="cropWidth" name="cropWidth">
+					<label for="cropHeight" class="mt-2">Высота:</label>
+					<input type="number" class="form-control" id="cropHeight" name="cropHeight">
+				</div>
+				<div class="aspect-ratio-icons hidden" id="aspectRatioIcons">
+					<button type="button" class="btn btn-outline-secondary" data-aspect-ratio="9/16"
+						title="Phone (9:16)">Телефон</button>
+					<button type="button" class="btn btn-outline-secondary" data-aspect-ratio="3/4"
+						title="Tablet (3:4)">Планшет</button>
+					<button type="button" class="btn btn-outline-secondary" data-aspect-ratio="16/9"
+						title="Desktop (16:9)">Компьютер</button>
+					<button type="button" class="btn btn-outline-secondary" data-aspect-ratio="1/1"
+						title="Square (1:1)">Квадрат</button>
+					<button type="button" class="btn btn-outline-secondary" data-aspect-ratio="NaN"
+						title="Free Aspect Ratio">Свободная трансформация</button>
+				</div>
+				<button id="cropButton" class="btn btn-success mt-3">Вырезать и скачать</button>
+			</div>
+			<div class="tab-pane fade" id="resize" role="tabpanel" aria-labelledby="resize-tab">
+				<div class="form-group">
+					<input type="file" class="form-control-file" id="resizeInput" accept="image/*">
+				</div>
+				<div id="resizeDimensionsContainer" class="form-group">
+					<label for="resizeWidth">Ширина:</label>
+					<input type="number" class="form-control" id="resizeWidth" name="resizeWidth">
+					<label for="resizeHeight" class="mt-2">Высота:</label>
+					<input type="number" class="form-control" id="resizeHeight" name="resizeHeight">
+				</div>
+				<button id="resizeButton" class="btn btn-primary mt-3">Уменьшить и скачать</button>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script>
+		const uploadInput = document.getElementById('uploadInput');
+		const previewImage = document.getElementById('previewImage');
+		const cropButton = document.getElementById('cropButton');
+		const dimensionsContainer = document.getElementById('dimensionsContainer');
+		const cropWidth = document.getElementById('cropWidth');
+		const cropHeight = document.getElementById('cropHeight');
+		const aspectRatioIcons = document.getElementById('aspectRatioIcons');
+		const resizeInput = document.getElementById('resizeInput');
+		const resizeButton = document.getElementById('resizeButton');
+		const resizeWidth = document.getElementById('resizeWidth');
+		const resizeHeight = document.getElementById('resizeHeight');
+		let cropper;
+
+		uploadInput.addEventListener('change', function (e) {
+			const file = e.target.files[0];
+			const reader = new FileReader();
+
+			reader.onload = function (event) {
+				previewImage.src = event.target.result;
+				previewImage.style.display = 'block';
+				dimensionsContainer.classList.remove('hidden');
+				aspectRatioIcons.classList.remove('hidden');
+
+				// Initialize Cropper.js
+				cropper = new Cropper(previewImage, {
+					aspectRatio: 4 / 3, // Default aspect ratio
+					viewMode: 1, // Show crop box only
+					autoCropArea: 1, // Auto crop whole image
+					responsive: true,
+					ready: function () {
+						const data = cropper.getData();
+						cropWidth.value = Math.round(data.width);
+						cropHeight.value = Math.round(data.height);
+					},
+					crop: function () {
+						const data = cropper.getData();
+						cropWidth.value = Math.round(data.width);
+						cropHeight.value = Math.round(data.height);
+					}
+				});
+			};
+
+			reader.readAsDataURL(file);
+		});
+
+		cropWidth.addEventListener('input', function () {
+			const data = cropper.getData();
+			data.width = parseInt(cropWidth.value);
+			cropper.setData(data);
+		});
+
+		cropHeight.addEventListener('input', function () {
+			const data = cropper.getData();
+			data.height = parseInt(cropHeight.value);
+			cropper.setData(data);
+		});
+
+		aspectRatioIcons.addEventListener('click', function (e) {
+			if (e.target.tagName === 'BUTTON') {
+				const aspectRatio = e.target.getAttribute('data-aspect-ratio').split('/');
+				const aspectRatioValue = parseFloat(aspectRatio[0]) / parseFloat(aspectRatio[1]);
+				cropper.setAspectRatio(aspectRatioValue);
+
+				// Remove 'selected' class from all icons and add it to the clicked icon
+				Array.from(aspectRatioIcons.children).forEach(icon => icon.classList.remove('selected'));
+				e.target.classList.add('selected');
+			}
+		});
+
+		cropButton.addEventListener('click', async function () {
+			if (!cropper) return;
+
+			// Get cropped data
+			const croppedData = cropper.getData();
+			console.log(croppedData)
+
+			// Prepare data for server
+			const formData = new FormData();
+			formData.append('image', uploadInput.files[0]);
+			formData.append('cropperData', JSON.stringify(croppedData));
+
+			// Send cropped image data to server
+			fetch('/image/upload', {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					return response.blob();
+				} else {
+					throw new Error('Ошибка при обработке изображения');
+				}
+			})
+			.then(blob => {
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'cropped-image.jpg';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			})
+			.catch(error => {
+				console.error('Ошибка:', error);
+				alert('Произошла ошибка при обработке изображения');
+			});
+		});
+
+		resizeButton.addEventListener('click', function () {
+			const file = resizeInput.files[0];
+			const width = resizeWidth.value;
+			const height = resizeHeight.value;
+
+			if (!file || !width || !height) {
+				alert('Пожалуйста, выберите изображение и задайте ширину и высоту.');
+				return;
+			}
+
+			// Prepare data for server
+			const formData = new FormData();
+			formData.append('image', file);
+			formData.append('width', width);
+			formData.append('height', height);
+
+			// Send resize image data to server
+			fetch('/image/resize', {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					return response.blob();
+				} else {
+					throw new Error('Ошибка при обработке изображения');
+				}
+			})
+			.then(blob => {
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'resized-image.jpg';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			})
+			.catch(error => {
+				console.error('Ошибка:', error);
+				alert('Произошла ошибка при обработке изображения');
+			});
+		});
+	</script>
+</body>
+
+</html>

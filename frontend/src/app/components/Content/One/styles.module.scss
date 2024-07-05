@@ -1,0 +1,45 @@
+.oneBlockPost {
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
+    background-color: #fff;
+    flex-direction: column;
+    border-radius: 12px;
+    padding: 24px;
+    color: #333;
+    display: flex;
+    &:hover {
+       :global .content-side {
+            .read-more-link {
+                color: #333;
+            }
+        }
+    }
+    :global .thumbnail-side {
+        margin: 0 0 16px;
+        display: block;
+        img {
+            border-radius: 10px;
+        }
+    }
+    :global .content-side {
+        justify-content: space-between;
+        flex-direction: column;
+        display: flex;
+        height: 100%;
+        strong {
+            line-height: 1.3;
+            display: block;
+        }
+        p {
+            line-height: 1.5;
+            font-weight: 100;
+            font-size: 14px;
+        }
+        .read-more-link {
+            color: $themeColor;
+            font-size: 12px;
+            &:hover {
+                color: #333;
+            }
+        }
+    }
+}

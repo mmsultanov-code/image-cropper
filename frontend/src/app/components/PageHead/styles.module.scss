@@ -1,0 +1,12 @@
+.pageHeadSection {
+    background-color: lighten($themeColor, 40%);
+    padding: 48px 0;
+    &.whiteText {
+        color: #fff;
+    }
+    :global .wrapper-inside {
+        h1 {
+            margin: 0;
+        }
+    }
+}

@@ -1,0 +1,42 @@
+.mainHeader {
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.05);
+    border-bottom: 1px solid $borderColor;
+    background-color: #fff;
+    padding: 12px 0;
+    :global .wrapper-inside {
+        .main-logo {
+            a {
+                display: block;
+                color: #333;
+                strong {
+                    span {
+                        font-weight: 300;
+                    }
+                }
+            }
+        }
+        .main-navigation {
+            ul {
+                @include ul;
+                li {
+                    display: inline-block;
+                    vertical-align: top;
+                    margin-right: 12px;
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                    a {
+                        letter-spacing: 0.2px;
+                        font-weight: bold;
+                        display: block;
+                        padding: 12px;
+                        color: #333;
+                        &:hover {
+                            color: $themeColor;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

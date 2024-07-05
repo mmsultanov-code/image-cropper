@@ -1,0 +1,26 @@
+@mixin ul {
+    list-style: none;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+}
+@mixin defaultButton {
+    background-color: transparent;
+    display: inline-block;
+    border: none;
+    padding: 0;
+    &:active,
+    &:focus {
+        outline: 0px !important;
+    }
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+$mainfont: "JetBrains Mono", monospace;
+$black: #222;
+$gray: #616763;
+$green: #68c481;
+$white: #f9fafb;
+$dividers: #E5E5E5;
