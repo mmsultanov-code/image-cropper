@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "html-react-parser": "^5.1.10",
+    "html-to-text": "^9.0.5",
     "next": "14.2.4",
     "normalize.css": "^8.0.1",
     "react": "^18",

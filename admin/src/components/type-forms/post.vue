@@ -22,12 +22,6 @@
                     </div>
 
                     <h1>Загрузить и обработать изображение</h1>
-                    <nav class="tabs-navigation">
-                        <ul>
-                            <li><button type="button" :class="{'active': active_tab === 'tab-1'}" @click="active_tab = 'tab-1'">Обрезка фотографии</button></li>
-                            <li><button type="button" :class="{'active': active_tab === 'tab-2'}" @click="active_tab = 'tab-2'">Уменьшение фотографии</button></li>
-                        </ul>
-                    </nav>
                     <div class="tab-content mt-4" id="imageTabsContent">
                         <div class="tab-pane" v-if="active_tab === 'tab-1'">
                             <div class="preview-container">
@@ -46,18 +40,6 @@
                                 <input type="file" @change="upload_file($event, 'thumbnail')" class="form-control-file" ref="uploadInput" accept="image/*">
                             </div>
                             <button type="button" class="theme-button" @click="crop_save">Вырезать и скачать</button>
-                        </div>
-                        <div class="tab-pane" v-if="active_tab === 'tab-2'">
-                            <div class="form-group">
-                                <input type="file" class="form-control-file" id="resizeInput" accept="image/*">
-                            </div>
-                            <div id="resizeDimensionsContainer" class="form-group">
-                                <label for="resizeWidth">Ширина:</label>
-                                <input type="number" class="form-control" id="resizeWidth" name="resizeWidth">
-                                <label for="resizeHeight" class="mt-2">Высота:</label>
-                                <input type="number" class="form-control" id="resizeHeight" name="resizeHeight">
-                            </div>
-                            <button id="resizeButton" class="theme-button" @click="resize_image()">Уменьшить и скачать</button>
                         </div>
                     </div>
                 </form-box>
